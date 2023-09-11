@@ -1,15 +1,21 @@
+
+#Importa las librerias necesarias
 import cv2
 import mediapipe as mp
 from settings import *
 import numpy as np
+
+
+# Importa las bibliotecas necesarias y los módulos definidos en "settings".
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
 
-
+# Define una clase llamada HandTracking para realizar el seguimiento de manos.
 class HandTracking:
     def __init__(self):
+        # Inicializa el módulo de seguimiento de manos de MediaPipe con ciertas configuraciones.
         self.hand_tracking = mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5)
         self.hand_x = 0
         self.hand_y = 0
@@ -20,15 +26,15 @@ class HandTracking:
     def scan_hands(self, image):
         rows, cols, _ = image.shape
 
-        # Flip the image horizontally for a later selfie-view display, and convert
-        # the BGR image to RGB.
+        # Voltea horizontalmente la imagen para que se vea como una vista de selfie y convierte
+        # la imagen BGR en RGB.
         image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
-        # To improve performance, optionally mark the image as not writeable to
-        # pass by reference.
+        # Para mejorar el rendimiento, se marca opcionalmente la imagen como no escribible para
+        # pasarla por referencia.
         image.flags.writeable = False
         self.results = self.hand_tracking.process(image)
 
-        # Draw the hand annotations on the image.
+        # Dibuja las anotaciones de la mano en la imagen.
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
@@ -38,14 +44,17 @@ class HandTracking:
             for hand_landmarks in self.results.multi_hand_landmarks:
                 x, y = hand_landmarks.landmark[9].x, hand_landmarks.landmark[9].y
 
+                # Calcula las coordenadas en píxeles de la posición de la mano en la pantalla.
                 self.hand_x = int(x * SCREEN_WIDTH)
                 self.hand_y = int(y * SCREEN_HEIGHT)
 
                 x1, y1 = hand_landmarks.landmark[12].x, hand_landmarks.landmark[12].y
 
+                # Comprueba si la mano está cerrada (basado en la posición de ciertos puntos).
                 if y1 > y:
                     self.hand_closed = True
 
+                # Dibuja los puntos y conexiones de la mano en la imagen.
                 mp_drawing.draw_landmarks(
                     image,
                     hand_landmarks,
@@ -55,15 +64,16 @@ class HandTracking:
         return image
 
     def get_hand_center(self):
+        # Devuelve las coordenadas (x, y) del centro de la mano.
         return (self.hand_x, self.hand_y)
 
 
     def display_hand(self):
+        # Muestra la imagen 
         cv2.imshow("image", self.image)
         cv2.waitKey(1)
 
     def is_hand_closed(self):
-
         pass
 
 
