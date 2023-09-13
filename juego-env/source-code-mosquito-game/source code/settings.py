@@ -1,9 +1,9 @@
 import pygame
 
-WINDOW_NAME = "Mosquito Exterminator"
+WINDOW_NAME = "Machete Mata a Machete"
 GAME_TITLE = WINDOW_NAME
 
-SCREEN_WIDTH, SCREEN_HEIGHT = 800, 700
+SCREEN_WIDTH, SCREEN_HEIGHT = 1200, 700
 
 FPS = 90
 DRAW_FPS = True
