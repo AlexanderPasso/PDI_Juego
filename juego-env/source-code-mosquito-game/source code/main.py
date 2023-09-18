@@ -8,7 +8,6 @@ from menu import Menu
 
 
 
-
 # Setup pygame/window --------------------------------------------- #
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (100,32) # windows position
 pygame.init()
